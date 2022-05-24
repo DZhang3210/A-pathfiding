@@ -1,5 +1,6 @@
 from main import *
 
+#Use dictionary to update and check if it exists in real time
 class MinNode:
     def __init__ (self, Node, left = None, right= None):
         #Main way of traversing heap
@@ -18,3 +19,5 @@ class MinHeap:
     #     else:
     #         currentCheck = self.head
     #         if(Node.val )
+
+#set1 = {(0,0),MinNode(Node(None, (0,0)))}
