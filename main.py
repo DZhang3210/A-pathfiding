@@ -41,7 +41,8 @@ class Node:
         # If we are reevaluating Node then that means that prev G path must've
         # been updated
         testScore = self.getValueStart(prev, self.coords[0], self.coords[1]) + prev.G
-        if(testScore > self.G):
+        if(testScore < self.G):
+            #Update prev, testScore and total
             self.prev = prev
             self.G = testScore
             self.F = self.G + self.H
@@ -90,6 +91,9 @@ class Node:
         print("H: ", self.H)
         print("F: ",self.F)
 
-c = Node(None, (0,0))
-for i in c.getSurroundingNodes():
-    i.printNode()
+#Unable to test reev so far
+c = Node(None, (1,0))
+c.printNode()
+# for i in c.getSurroundingNodes():
+#     i.printNode()
+
