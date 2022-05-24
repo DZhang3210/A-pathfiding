@@ -1,23 +1,54 @@
 from main import *
 
-#Use dictionary to update and check if it exists in real time
-class MinNode:
-    def __init__ (self, Node, left = None, right= None):
-        #Main way of traversing heap
-        self.left = left
-        self.right = right
-        #Value in heap
-        self.Node = Node #remember that we can also check Node.f
+def heapify(arr, n, i):
+    parent = int(((i - 1) / 2))
+    # For Max-Heap
+    # If current node is greater than its parent
+    # Swap both of them and call heapify again
+    # for the parent
+    if arr[i].F < arr[parent].F:
+        arr[i], arr[parent] = arr[parent], arr[i]
+        # Recursively heapify the parent node
+        heapify(arr, n, parent)
 
-class MinHeap:
-    def __init__ (self):
-        self.head = None
+# Function to delete the root from Heap
+# def deleteRoot(arr):
+#     global n
+#     # Get the last element
+#     lastElement = arr[n - 1]
+#     # Replace root with last element
+#     arr[0] = lastElement
+#     # Decrease size of heap by 1
+#     n = n - 1
+#     # heapify the root node
+#     heapify(arr, n, 0)
 
-    # def insert(self, Node):
-    #     if(self.head == None):
-    #         self.head = MinNode(Node)
-    #     else:
-    #         currentCheck = self.head
-    #         if(Node.val )
 
-#set1 = {(0,0),MinNode(Node(None, (0,0)))}
+# Function to insert a new node to the Heap
+
+def insertNode(arr, key):
+    global n
+    # Increase the size of Heap by 1
+    n += 1
+    # Insert the element at end of Heap
+    arr.append(key)
+    # Heapify the new node following a
+    # Bottom-up approach
+    heapify(arr, n, n - 1)
+
+
+# A utility function to print array of size n
+def printArray(arr, n):
+    for i in range(n):
+        arr[i].printNode()
+
+# nodes = [Node(None, start)]
+# checked = {(0,0):Node(None, start)}
+nodes = []
+c = Node(None, (0,0))
+nodes.append(c)
+n=1
+for i in c.getSurroundingNodes():
+    insertNode(nodes, i)
+printArray(nodes, n)
+

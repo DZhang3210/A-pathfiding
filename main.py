@@ -24,6 +24,7 @@ board = [
 class Node:
     #Instantiates coords, prev, and calculates G,H,F
     def __init__ (self, prev, coords):
+        self.checked = False
         self.prev = prev
         self.coords = coords
 
@@ -86,14 +87,17 @@ class Node:
         return nodes
 
     def printNode(self):
+        print("==========")
+        if(self.prev != None):
+            print("Parents:",self.prev.coords)
         print(self.coords)
         print("G: ", self.G)
         print("H: ", self.H)
         print("F: ",self.F)
 
 #Unable to test reev so far
-c = Node(None, (1,0))
-c.printNode()
+# c = Node(None, (1,0))
+# c.printNode()
 # for i in c.getSurroundingNodes():
 #     i.printNode()
 
