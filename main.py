@@ -33,6 +33,16 @@ board = [
 #     [0,0,1]
 # ]
 
+#THIS IS WHERE ALL CONSTANTS FOR PROBLEM ARE STORED
+
+
+
+
+
+
+
+
+
 
 #On initialization knows the final end point, calculates G value and H values
 #automatically and if we want to reevaluate we must only change the parent

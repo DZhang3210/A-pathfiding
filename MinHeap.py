@@ -85,6 +85,11 @@ def printHeap(lst):
 # nodes = [Node(None, start)]
 
 #C represent the current Node
+
+
+
+#THIS REPRESENTS THE MAIN FUNCTION WHICH USES A* PATHFINDING
+
 nodes = []
 checked = {start:Node(None, start)}
 nodes = [Node(None, start)]
