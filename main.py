@@ -10,6 +10,14 @@ dir = [[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1],[0,1]]
 #0 Stands for open space
 #1 Stands for Flag
 #2 Stands for obstacle
+start, end = (1,2),(4,6)
+board = [
+    [0,0,0,0,0,0,0,0],
+    [0,2,1,0,0,0,0,0],
+    [0,2,2,2,2,2,2,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,0]
+]
 # start, end = (0,0), (4,5)
 # board = [
 #     [1,0,0,0,0,0],
@@ -18,12 +26,12 @@ dir = [[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1],[0,1]]
 #     [0,0,0,0,0,0],
 #     [0,0,0,0,0,1]
 # ]
-start, end = (0,0), (2,2)
-board = [
-    [1,0,0],
-    [2,0,0],
-    [0,0,1]
-]
+# start, end = (0,0), (2,2)
+# board = [
+#     [1,0,0],
+#     [2,0,0],
+#     [0,0,1]
+# ]
 
 
 #On initialization knows the final end point, calculates G value and H values
@@ -91,12 +99,11 @@ class Node:
             #print("In direction")
             currentX += i[0]
             currentY += i[1]
-            if(currentX >= 0 and currentX < len(board[0])
-                and currentY >= 0 and currentY < len(board)
+            if(currentX >= 0 and currentX < len(board)
+                and currentY >= 0 and currentY < len(board[0])
                 and board[currentX][currentY] != 2):
                     returns.append(Node(self, (currentX, currentY)))
             currentX, currentY = self.coords[0], self.coords[1]
-
         return returns
 
     def printNode(self):
@@ -107,10 +114,3 @@ class Node:
         print("G: ", self.G)
         print("H: ", self.H)
         print("F: ",self.F)
-
-#Unable to test reev so far
-# c = Node(None, (1,0))
-# c.printNode()
-# for i in c.getSurroundingNodes():
-#     i.printNode()
-
