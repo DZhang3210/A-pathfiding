@@ -74,6 +74,11 @@ def reverseChain(node):
         l+=1
         print(currentNode.coords, end = " <- ")
         vector.append(currentNode.coords)
+        pygame.display.update()
+        pygame.time.delay(200)
+        indexX = currentNode.coords[0] * tile_size + vBuffer * tile_size
+        indexY = currentNode.coords[1] * tile_size + hBuffer * tile_size
+        pygame.draw.rect(game_display, (66, 135, 245 ), [indexY, indexX, tile_size-spacing, tile_size-spacing], 0)
         currentNode = currentNode.prev
     print("Total Jumps", l - 1, ":|: Total Path Nodes", l)
     printPath(vector)
@@ -107,32 +112,32 @@ def pathFinding(board):
     checked = {start: Node(None, end, start)}
     nodes = [Node(None, end, start)]
     #Always choose the minimum object
-
     while len(nodes) > 0:
         pygame.display.update()
         pygame.time.delay(200)
         c = deleteRoot(nodes)
         while (len(nodes) > 0 and checked[c.coords].checked == True):
             c = deleteRoot(nodes)
-        indexX = c.coords[0] * tile_size + hBuffer * tile_size
-        indexY = c.coords[1] * tile_size + vBuffer * tile_size
+        indexX = c.coords[0] * tile_size + vBuffer * tile_size
+        indexY = c.coords[1] * tile_size + hBuffer * tile_size
+        #print(c.coords[0], c.coords[1])
         checked[c.coords].checked = True
-        pygame.draw.rect(game_display, (245, 44, 88), [indexX, indexY, tile_size, tile_size], 0)
+        pygame.draw.rect(game_display, (245, 44, 88), [indexY, indexX, tile_size-spacing, tile_size-spacing], 0)
 
         if (c.coords == end):
             print("Done DUN DUN DUUUN")
             global finished
             finished = True
             reverseChain(c)
-            pygame.draw.rect(game_display, (246, 250, 45), [indexX, indexY, tile_size, tile_size], 0)
+            pygame.draw.rect(game_display, (246, 250, 45), [indexY, indexX, tile_size-spacing, tile_size-spacing], 0)
             break
         #print("Checking (", c.coords[1],",",c.coords[0],")")
         for i in c.getSurroundingNodes(board):
 
             if not(i.coords in checked.keys()):
-                neighborX = i.coords[0] * tile_size + hBuffer*tile_size
-                neighborY = i.coords[1] * tile_size + vBuffer*tile_size
-                pygame.draw.rect(game_display, (57, 191, 115), [neighborX, neighborY, tile_size, tile_size], 0)
+                neighborX = i.coords[0] * tile_size + vBuffer*tile_size
+                neighborY = i.coords[1] * tile_size + hBuffer*tile_size
+                pygame.draw.rect(game_display, (57, 191, 115), [neighborY, neighborX, tile_size-spacing, tile_size-spacing], 0)
                 checked[i.coords] = i
                 insertNode(nodes, checked[i.coords])
             elif(checked[i.coords].checked == False):
@@ -141,9 +146,12 @@ def pathFinding(board):
                 if checked[i.coords].reev(c):
                     insertNode(nodes, checked[i.coords])
         #Check over any duplicate Nodes
-    if(n == 0):
-        print("Can't Find Ending")
-
+        print(len(nodes))
+        if(n<=0):
+            print("Can't Find Ending")
+            finished = True
+            break
+    pygame.draw.rect(game_display, (246, 250, 45), [start[1]*tile_size+hBuffer*tile_size, start[0]*tile_size + vBuffer*tile_size, tile_size - spacing, tile_size - spacing], 0)
 n = 1
 tile_size = 20
 hBuffer, vBuffer, spacing = display_width//(8*tile_size),display_height//(5*tile_size),1
@@ -204,10 +212,13 @@ while True:
                 pygame.draw.rect(game_display, (201, 66, 174), [currentX, currentY, tile_size-spacing, tile_size-spacing], 0)
                 board[indexY][indexX] = 1
                 if(start == None):
-                    start = (indexX, indexY)
+                    start = (indexY, indexX)
                 else:
-                    end = (indexX, indexY)
+                    end = (indexY, indexX)
                 #print((indexY, indexX), " marked")
             if(event.key == K_p):
                 if(start != None and end != None):
                     pathFinding(board)
+            if(event.key == K_j):
+                printPath(board)
+                print("\n<<<<<<<<<<<<<<<<<<\n")
