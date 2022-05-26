@@ -137,6 +137,8 @@ tile_size = 20
 hBuffer, vBuffer, spacing = display_width//(8*tile_size),display_height//(5*tile_size),1
 xBegin, xEnd = hBuffer, (display_width//tile_size) - hBuffer
 yBegin, yEnd = vBuffer, (display_height//tile_size)
+currentX, currentY = xBegin*tile_size,yBegin * tile_size
+board = [[0 for i in range(xEnd - xBegin)] for b in range(yEnd - yBegin)]
 for x in range(xBegin, xEnd):
     for y in range(yBegin, yEnd):
         pygame.draw.rect(game_display, (0, 155,155) , [x*tile_size, y*tile_size, tile_size-spacing, tile_size-spacing], 0)
@@ -145,8 +147,26 @@ pygame.draw.line(game_display, (0, 0, 0), (xBegin*tile_size,yBegin*tile_size), (
 pygame.draw.line(game_display, (0, 0, 0), (xBegin*tile_size, yBegin*tile_size), (xBegin*tile_size, yEnd*tile_size), boldness)
 pygame.draw.line(game_display, (0, 0, 0), (xEnd*tile_size, yBegin*tile_size), (xEnd*tile_size, yEnd*tile_size), boldness)
 #pygame.draw.line(game_display, (0, 0, 0), (2*display_width//3, 0), (2*display_width//3, display_width), boldness)
-
 while True:
+    pos = pygame.mouse.get_pos()
+    if(pos[0] > xBegin * tile_size and pos[0] < xEnd * tile_size and pos[1] > yBegin * tile_size):
+        #Rounding locations to a tile location
+        squareX = (pos[0] // tile_size) * tile_size
+        squareY = (pos[1] // tile_size) * tile_size
+        if (squareX != currentX or squareY != currentY):
+            indexX = (currentX - hBuffer*tile_size)//tile_size
+            indexY = (currentY - vBuffer * tile_size)//tile_size
+            sX = (squareX - hBuffer * tile_size) // tile_size
+            sY = (squareY - vBuffer * tile_size) // tile_size
+            #print(squareX - hBuffer*tile_size, squareY - vBuffer * tile_size)
+            #print((indexY, indexX), " checked")
+            if(board[indexY][indexX] != 2 and board[indexY][indexX] != 1):
+                pygame.draw.rect(game_display, (255, 255, 255), [currentX, currentY, tile_size, tile_size], 0)
+                pygame.draw.rect(game_display, (0, 155, 155), [currentX, currentY, tile_size-spacing, tile_size-spacing], 0)
+            if(board[sY][sX] != 2 and board[sY][sX] != 1):
+                pygame.draw.rect(game_display, (255, 255, 0), [squareX, squareY, tile_size, tile_size], 3)
+            currentX, currentY = squareX, squareY
+
     pygame.display.update()
     for event in pygame.event.get():
         # Check if you need to quit program
@@ -157,3 +177,14 @@ while True:
         ))):
             pygame.quit()
             quit()
+        if(event.type == KEYDOWN):
+            indexX = (currentX - hBuffer*tile_size)//tile_size
+            indexY = (currentY - vBuffer*tile_size)//tile_size
+            if(event.key == K_f):
+                pygame.draw.rect(game_display, (0, 0, 0), [currentX, currentY, tile_size-spacing, tile_size-spacing], 0)
+                board[indexY][indexX] = 2
+                #print((indexY, indexX), " marked")
+            if(event.key == K_g):
+                pygame.draw.rect(game_display, (201, 66, 174), [currentX, currentY, tile_size-spacing, tile_size-spacing], 0)
+                board[indexY][indexX] = 1
+                #print((indexY, indexX), " marked")
