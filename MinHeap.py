@@ -75,7 +75,7 @@ def reverseChain(node):
         print(currentNode.coords, end = " <- ")
         vector.append(currentNode.coords)
         pygame.display.update()
-        pygame.time.delay(200)
+        pygame.time.delay(20)
         indexX = currentNode.coords[0] * tile_size + vBuffer * tile_size
         indexY = currentNode.coords[1] * tile_size + hBuffer * tile_size
         pygame.draw.rect(game_display, (66, 135, 245 ), [indexY, indexX, tile_size-spacing, tile_size-spacing], 0)
@@ -114,7 +114,7 @@ def pathFinding(board):
     #Always choose the minimum object
     while len(nodes) > 0:
         pygame.display.update()
-        pygame.time.delay(200)
+        pygame.time.delay(20)
         c = deleteRoot(nodes)
         while (len(nodes) > 0 and checked[c.coords].checked == True):
             c = deleteRoot(nodes)
