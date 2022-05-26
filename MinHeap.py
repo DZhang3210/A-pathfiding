@@ -1,7 +1,7 @@
 from main import *
 import pygame
 from pygame.locals import *
-from MinHeap import *
+#from MinHeap import *
 
 pygame.init()
 display_width = 603
@@ -42,6 +42,7 @@ def heapifyIns(arr, n, i):
 def deleteRoot(arr):
     global n
     min = arr[0]
+    print(n)
     if(n > 1):
         arr[0] = arr[n-1]
     n -= 1
@@ -98,24 +99,40 @@ def printHeap(lst):
 
 # nodes = [Node(None, start)]
 
+start, end = None, None
+finished = False
 #C represent the current Node
-def pathFinding():
+def pathFinding(board):
+    nodes = []
+    checked = {start: Node(None, end, start)}
+    nodes = [Node(None, end, start)]
     #Always choose the minimum object
+
     while len(nodes) > 0:
+        pygame.display.update()
+        pygame.time.delay(200)
         c = deleteRoot(nodes)
         while (len(nodes) > 0 and checked[c.coords].checked == True):
             c = deleteRoot(nodes)
+        indexX = c.coords[0] * tile_size + hBuffer * tile_size
+        indexY = c.coords[1] * tile_size + vBuffer * tile_size
         checked[c.coords].checked = True
+        pygame.draw.rect(game_display, (245, 44, 88), [indexX, indexY, tile_size, tile_size], 0)
 
         if (c.coords == end):
             print("Done DUN DUN DUUUN")
+            global finished
+            finished = True
             reverseChain(c)
+            pygame.draw.rect(game_display, (246, 250, 45), [indexX, indexY, tile_size, tile_size], 0)
             break
-
         #print("Checking (", c.coords[1],",",c.coords[0],")")
-        for i in c.getSurroundingNodes():
+        for i in c.getSurroundingNodes(board):
+
             if not(i.coords in checked.keys()):
-                #print("Inserting element ", i.coords, "through New")
+                neighborX = i.coords[0] * tile_size + hBuffer*tile_size
+                neighborY = i.coords[1] * tile_size + vBuffer*tile_size
+                pygame.draw.rect(game_display, (57, 191, 115), [neighborX, neighborY, tile_size, tile_size], 0)
                 checked[i.coords] = i
                 insertNode(nodes, checked[i.coords])
             elif(checked[i.coords].checked == False):
@@ -123,22 +140,21 @@ def pathFinding():
                 #print("Inserting element ", i.coords, "through Extra")
                 if checked[i.coords].reev(c):
                     insertNode(nodes, checked[i.coords])
-
         #Check over any duplicate Nodes
     if(n == 0):
         print("Can't Find Ending")
 
-nodes = []
-checked = {start:Node(None, start)}
-nodes = [Node(None, start)]
 n = 1
-#pathFinding()
 tile_size = 20
 hBuffer, vBuffer, spacing = display_width//(8*tile_size),display_height//(5*tile_size),1
 xBegin, xEnd = hBuffer, (display_width//tile_size) - hBuffer
 yBegin, yEnd = vBuffer, (display_height//tile_size)
 currentX, currentY = xBegin*tile_size,yBegin * tile_size
 board = [[0 for i in range(xEnd - xBegin)] for b in range(yEnd - yBegin)]
+
+def coordsToIndex(x, y):
+    return x * tile_size + hBuffer, y * tile_size + vBuffer
+
 for x in range(xBegin, xEnd):
     for y in range(yBegin, yEnd):
         pygame.draw.rect(game_display, (0, 155,155) , [x*tile_size, y*tile_size, tile_size-spacing, tile_size-spacing], 0)
@@ -160,10 +176,10 @@ while True:
             sY = (squareY - vBuffer * tile_size) // tile_size
             #print(squareX - hBuffer*tile_size, squareY - vBuffer * tile_size)
             #print((indexY, indexX), " checked")
-            if(board[indexY][indexX] != 2 and board[indexY][indexX] != 1):
+            if(board[indexY][indexX] != 2 and board[indexY][indexX] != 1 and not finished):
                 pygame.draw.rect(game_display, (255, 255, 255), [currentX, currentY, tile_size, tile_size], 0)
                 pygame.draw.rect(game_display, (0, 155, 155), [currentX, currentY, tile_size-spacing, tile_size-spacing], 0)
-            if(board[sY][sX] != 2 and board[sY][sX] != 1):
+            if(board[sY][sX] != 2 and board[sY][sX] != 1 and not finished):
                 pygame.draw.rect(game_display, (255, 255, 0), [squareX, squareY, tile_size, tile_size], 3)
             currentX, currentY = squareX, squareY
 
@@ -187,4 +203,11 @@ while True:
             if(event.key == K_g):
                 pygame.draw.rect(game_display, (201, 66, 174), [currentX, currentY, tile_size-spacing, tile_size-spacing], 0)
                 board[indexY][indexX] = 1
+                if(start == None):
+                    start = (indexX, indexY)
+                else:
+                    end = (indexX, indexY)
                 #print((indexY, indexX), " marked")
+            if(event.key == K_p):
+                if(start != None and end != None):
+                    pathFinding(board)

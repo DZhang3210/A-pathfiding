@@ -10,14 +10,14 @@ dir = [[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1],[0,1]]
 #0 Stands for open space
 #1 Stands for Flag
 #2 Stands for obstacle
-start, end = (1,2),(4,6)
-board = [
-    [0,0,0,0,2,0,0,2,0,0],
-    [0,2,1,0,0,2,2,0,0,0],
-    [0,2,2,2,2,2,2,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,0,0,0]
-]
+# start, end = (1,2),(4,6)
+# board = [
+#     [0,0,0,0,2,0,0,2,0,0],
+#     [0,2,1,0,0,2,2,0,0,0],
+#     [0,2,2,2,2,2,2,0,0,0],
+#     [0,0,0,0,0,0,0,0,0,0],
+#     [0,0,0,0,0,0,1,0,0,0]
+# ]
 # start, end = (0,0), (4,5)
 # board = [
 #     [1,0,0,0,0,0],
@@ -40,18 +40,15 @@ board = [
 
 
 
-
-
-
-
 #On initialization knows the final end point, calculates G value and H values
 #automatically and if we want to reevaluate we must only change the parent
 # and check to see if it exists
 class Node:
     #Instantiates coords, prev, and calculates G,H,F
-    def __init__ (self, prev, coords):
+    def __init__ (self, prev, end, coords):
         self.checked = False
         self.prev = prev
+        self.end = end
         self.coords = coords
 
         #Main way of prioritizing and calculating next node in heap
@@ -59,7 +56,7 @@ class Node:
         self.G = self.getValueStart(prev, self.coords[0], self.coords[1])
         if(prev != None):
             self.G += prev.G
-        self.H = self.getValueEnd()
+        self.H = self.getValueEnd(end)
         self.F = self.G + self.H
 
     #Automatically Reassigning new F based on new prev if new path is
@@ -78,7 +75,7 @@ class Node:
             return True
         return False
     #Evaluating all import values from start/end
-    def getValueEnd(self):
+    def getValueEnd(self, end):
         total = 0
         x, y = abs(end[0] - self.coords[0]), abs(end[1] - self.coords[1])
         #print(x,y, end[0], end[1])
@@ -102,7 +99,7 @@ class Node:
         return 14 if prev.coords[0] != x and prev.coords[1] != y else 10
 
     #Returns all surrounding Nodes to be returned to minHeap
-    def getSurroundingNodes(self):
+    def getSurroundingNodes(self, board):
         currentX, currentY = self.coords[0], self.coords[1]
         returns = []
         for i in dir:
@@ -112,7 +109,7 @@ class Node:
             if(currentX >= 0 and currentX < len(board)
                 and currentY >= 0 and currentY < len(board[0])
                 and board[currentX][currentY] != 2):
-                    returns.append(Node(self, (currentX, currentY)))
+                    returns.append(Node(self, self.end, (currentX, currentY)))
             currentX, currentY = self.coords[0], self.coords[1]
         return returns
 
