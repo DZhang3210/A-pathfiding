@@ -108,7 +108,6 @@ start, end = None, None
 finished = False
 #C represent the current Node
 def pathFinding(board):
-    nodes = []
     checked = {start: Node(None, end, start)}
     nodes = [Node(None, end, start)]
     #Always choose the minimum object
@@ -209,12 +208,14 @@ while True:
                 board[indexY][indexX] = 2
                 #print((indexY, indexX), " marked")
             if(event.key == K_g):
-                pygame.draw.rect(game_display, (201, 66, 174), [currentX, currentY, tile_size-spacing, tile_size-spacing], 0)
-                board[indexY][indexX] = 1
-                if(start == None):
-                    start = (indexY, indexX)
-                else:
-                    end = (indexY, indexX)
+                if(start == None or end == None):
+                    pygame.draw.rect(game_display, (201, 66, 174),
+                                     [currentX, currentY, tile_size - spacing, tile_size - spacing], 0)
+                    board[indexY][indexX] = 1
+                    if(start == None):
+                        start = (indexY, indexX)
+                    else:
+                        end = (indexY, indexX)
                 #print((indexY, indexX), " marked")
             if(event.key == K_p):
                 if(start != None and end != None):
@@ -222,3 +223,16 @@ while True:
             if(event.key == K_j):
                 printPath(board)
                 print("\n<<<<<<<<<<<<<<<<<<\n")
+            if (event.key == K_e):
+                for x in range(len(board)):
+                    for y in range(len(board[0])):
+                        board[x][y] = 0
+                start,end = None, None
+                game_display.fill((255,255,255))
+                for x in range(xBegin, xEnd):
+                    for y in range(yBegin, yEnd):
+                        pygame.draw.rect(game_display, (0, 155, 155),[x * tile_size, y * tile_size, tile_size - spacing, tile_size - spacing], 0)
+                finished = False
+                n = 1
+
+
