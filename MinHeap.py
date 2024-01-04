@@ -15,7 +15,7 @@ font1 = pygame.font.Font('freesansbold.ttf', 16)
 
 
 
-def heapifyDel(arr, n, i):
+def heapifyDael(arr, n, i):
     smallest = i  # Initialize largest as root
     l = 2 * i + 1  # left = 2*i + 1
     r = 2 * i + 2  # right = 2*i + 2
